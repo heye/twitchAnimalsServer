@@ -3,7 +3,7 @@ from typing import Dict, Tuple, List
 import os
 import traceback
 
-temp_path = "/home/he/temp/"
+temp_path = "../../temp/"
 
 def setup():
     try:
@@ -21,6 +21,8 @@ def write_file(data: str) -> bool:
     try:    
         file_path = temp_path + "names.txt"
 
+        print("STORAGE WRITE " + file_path)
+
         with open(file_path, 'w+') as temp_file:
             temp_file.write(data)
             result = True
@@ -35,6 +37,8 @@ def append_file(data: str) -> bool:
 
     try:    
         file_path = temp_path + "names.txt"
+
+        print("STORAGE APPEND " + file_path)
 
         with open(file_path, 'a+') as temp_file:
             temp_file.write(data)
@@ -53,6 +57,8 @@ def read_file() -> bytes:
 
         if not os.path.isfile(file_path):
             return data
+
+        print("STORAGE READ " + file_path)
     
         with open(file_path, 'r+') as temp_file:
             data = temp_file.read()

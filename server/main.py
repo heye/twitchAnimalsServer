@@ -5,81 +5,36 @@ import asyncio
 import uvloop
 from sanic import Sanic
 from sanic import response
-from server import messagehub
+import names
+import sys
+import threading
 
-asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-
-
-app = Sanic()
-
-#main functionality add and get names 
-@app.route('/', methods=['GET'])
-async def handle_request(request):
-    return response.text(messagehub.handleGet())
-
-@app.route('/add/<name>', methods=['GET'])
-async def handle_request(request, name):
-    return response.text(messagehub.handleAdd(name))
+from server import Server
+from bot import TwitchBot
 
 
+def main():
 
-@app.route('/rage/add/<name>', methods=['GET'])
-async def handle_request(request, name):
-    return response.text(messagehub.handleAddRage(name))
+    if len(sys.argv) != 5:
+        print("Usage: twitchbot <username> <token> <channel> <port>")
+        sys.exit(1)
 
-@app.route('/rage/get/', methods=['GET'])
-async def handle_request(request):
-    return response.text(messagehub.handleGetRage())
+    username  = sys.argv[1]
+    token     = sys.argv[2]
+    channel   = sys.argv[3]
+    port   = int(sys.argv[4])
 
-@app.route('/nuzzle/add/<name>', methods=['GET'])
-async def handle_request(request, name):
-    return response.text(messagehub.handleAddNuzzle(name))
+    #init cache
+    names.cache.setup()
 
-@app.route('/nuzzle/get/', methods=['GET'])
-async def handle_request(request):
-    return response.text(messagehub.handleGetNuzzle())
+    #start the bot
+    twitch_bot = TwitchBot(username, token, channel)
+    TwitchBot.start_background(twitch_bot)
 
-@app.route('/animals/set/', methods=['POST'])
-async def handle_request(request):
-    return response.text(messagehub.handleSetAnimals(str(request.body, "utf-8")))
-
-@app.route('/animals/get/', methods=['GET'])
-async def handle_request(request):
-    return response.text(messagehub.handleGetAnimals())
-
-@app.route('/new_animals/add/', methods=['POST'])
-async def handle_request(request):
-    return response.text(messagehub.handleAddNewAnimals(str(request.body, "utf-8")))
-
-@app.route('/new_animals/get/', methods=['GET'])
-async def handle_request(request):
-    return response.text(messagehub.handleGetNewAnimals())
-
-
-
-@app.route('/startbot/<channel>', methods=['GET'])
-async def handle_request(request, channel):
-    return response.text(messagehub.handleStartBot(channel))
-
-
-
-
-
-
-#clear all names - should hardly be in use, since name list has limited size and is kept up to date
-@app.route('/clear/123', methods=['GET'])
-async def handle_request(request):
-    return response.text(messagehub.handleClear())
+    #run server
+    serv = Server()
+    serv.run(port)
 
 
 if __name__ == '__main__':
-    
-    messagehub.setup();
-
-    print(ssl.OPENSSL_VERSION)
-    
-    hostAddr = '0.0.0.0'
-
-    certDir = ''
-
-    app.run(host=hostAddr, port=8070, workers=1)
+    main()
