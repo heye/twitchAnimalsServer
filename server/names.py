@@ -8,9 +8,12 @@ class cache:
     ret = ""
     names = []
     file_storage = None
+    pool_size = 80
 
     @classmethod
-    def setup(cls, channel):
+    def setup(cls, channel, pool_size):
+        cls.pool_size = pool_size
+
         cls.file_storage = FileStorage()
         cls.file_storage.setup(channel)
 
@@ -36,7 +39,7 @@ class cache:
         if name not in cls.names:
             cls.names.append(name)        
             cls.ret += name + '\n'
-            if len(cls.names) > 80:
+            if len(cls.names) > cls.pool_size:
                 cls.names.pop(0)
                 
                 fist_line_length = 0

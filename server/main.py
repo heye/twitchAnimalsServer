@@ -15,17 +15,18 @@ from bot import TwitchBot
 
 def main():
 
-    if len(sys.argv) != 5:
-        print("Usage: twitchbot <username> <token> <channel> <port>")
+    if len(sys.argv) != 6:
+        print("Usage: twitchbot <username> <token> <channel> <port> <name_pool_size>")
         sys.exit(1)
 
     username  = sys.argv[1]
     token     = sys.argv[2]
     channel   = sys.argv[3]
     port   = int(sys.argv[4])
+    name_pool_size   = int(sys.argv[5])
 
     #init cache
-    names.cache.setup(channel)
+    names.cache.setup(channel, name_pool_size)
 
     #start the bot
     twitch_bot = TwitchBot(username, token, channel)
