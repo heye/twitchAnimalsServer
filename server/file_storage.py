@@ -3,67 +3,74 @@ from typing import Dict, Tuple, List
 import os
 import traceback
 
-temp_path = "../../temp/"
 
-def setup():
-    try:
-        os.mkdir(temp_path)
-    except FileExistsError:
-        return
-    except:
-        traceback.print_exc()
-
+class FileStorage:
         
-#add data to a temporary file
-def write_file(data: str) -> bool:
-    result = False
-
-    try:    
-        file_path = temp_path + "names.txt"
-
-        print("STORAGE WRITE " + file_path)
-
-        with open(file_path, 'w+') as temp_file:
-            temp_file.write(data)
-            result = True
-    except:
-        traceback.print_exc()
-    
-    return result
+    def __init__(self):
+        self.channel = ""
+        self.temp_path = "../../temp/"
 
 
-def append_file(data: str) -> bool:
-    result = False
+    def setup(self, channel = ""):
+        self.channel = channel
+        try:
+            os.mkdir(self.temp_path)
+        except FileExistsError:
+            return
+        except:
+            traceback.print_exc()
 
-    try:    
-        file_path = temp_path + "names.txt"
+            
+    #add data to a temporary file
+    def write_file(self, data: str) -> bool:
+        result = False
 
-        print("STORAGE APPEND " + file_path)
+        try:    
+            file_path = self.temp_path + self.channel + ".txt"
 
-        with open(file_path, 'a+') as temp_file:
-            temp_file.write(data)
-            result = True
-    except:
-        traceback.print_exc()
-    
-    return result
+            print("STORAGE WRITE " + file_path)
+
+            with open(file_path, 'w+') as temp_file:
+                temp_file.write(data)
+                result = True
+        except:
+            traceback.print_exc()
+        
+        return result
 
 
-def read_file() -> bytes:
-    data = ""
+    def append_file(self, data: str) -> bool:
+        result = False
 
-    try:
-        file_path = temp_path + "names.txt"
+        try:    
+            file_path = self.temp_path + self.channel + ".txt"
 
-        if not os.path.isfile(file_path):
-            return data
+            print("STORAGE APPEND " + file_path)
 
-        print("STORAGE READ " + file_path)
-    
-        with open(file_path, 'r+') as temp_file:
-            data = temp_file.read()
-    except:
-        traceback.print_exc()
-    return data
+            with open(file_path, 'a+') as temp_file:
+                temp_file.write(data)
+                result = True
+        except:
+            traceback.print_exc()
+        
+        return result
+
+
+    def read_file(self) -> bytes:
+        data = ""
+
+        try:
+            file_path = self.temp_path + self.channel + ".txt"
+
+            if not os.path.isfile(file_path):
+                return data
+
+            print("STORAGE READ " + file_path)
+        
+            with open(file_path, 'r+') as temp_file:
+                data = temp_file.read()
+        except:
+            traceback.print_exc()
+        return data
 
 

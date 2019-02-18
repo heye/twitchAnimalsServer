@@ -1,17 +1,20 @@
 
 from typing import Dict
 import traceback
-import file_storage
+from file_storage import FileStorage
 
 
 class cache:
     ret = ""
     names = []
+    file_storage = None
 
     @classmethod
-    def setup(cls):
-        file_storage.setup()
-        cls.ret = file_storage.read_file()
+    def setup(cls, channel):
+        cls.file_storage = FileStorage()
+        cls.file_storage.setup(channel)
+
+        cls.ret = cls.file_storage.read_file()
 
         for one_name in cls.ret.splitlines():
             if one_name not in cls.names:
@@ -43,7 +46,7 @@ class cache:
                         break
                 cls.ret = cls.ret[fist_line_length:]
 
-            file_storage.write_file(cls.ret)
+            cls.file_storage.write_file(cls.ret)
             return "added"
 
         else:
@@ -62,6 +65,6 @@ class cache:
     def clear_all(cls) -> str:
         cls.ret = ""
         cls.names = []
-        file_storage.write_file("")
+        cls.file_storage.write_file("")
         return "cleared"
 

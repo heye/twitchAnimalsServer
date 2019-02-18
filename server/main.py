@@ -25,7 +25,7 @@ def main():
     port   = int(sys.argv[4])
 
     #init cache
-    names.cache.setup()
+    names.cache.setup(channel)
 
     #start the bot
     twitch_bot = TwitchBot(username, token, channel)
@@ -33,7 +33,7 @@ def main():
 
     #run server
     serv = Server()
-    serv.run(port)
+    serv.run(port, channel)
 
 
 if __name__ == '__main__':
