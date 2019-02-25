@@ -8,7 +8,7 @@ class cache:
     ret = ""
     names = []
     file_storage = None
-    pool_size = 80
+    pool_size = 10
 
     @classmethod
     def setup(cls, channel, pool_size):
