@@ -8,6 +8,7 @@ from sanic import response
 import names
 import sys
 import threading
+import setproctitle
 
 from server import Server
 from bot import TwitchBot
@@ -24,6 +25,8 @@ def main():
     channel   = sys.argv[3]
     port   = int(sys.argv[4])
     name_pool_size   = int(sys.argv[5])
+
+    setproctitle.setproctitle(channel)
 
     #init cache
     names.cache.setup(channel, name_pool_size)
