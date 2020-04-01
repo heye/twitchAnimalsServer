@@ -8,6 +8,7 @@ import urllib.parse
 import traceback
 import threading
 import names
+import messages
 
 class BotStore:
     bot = None
@@ -57,6 +58,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
     def handle_message(self, name, message, connection):
         print("FROM " + name)
         names.cache.add_name(name)
+        messages.cache.add_message(name, message)
 
         #TODO: add name to cache
 

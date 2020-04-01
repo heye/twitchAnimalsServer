@@ -5,6 +5,7 @@ import uvloop
 from sanic import Sanic
 from sanic import response
 import names
+import messages
 
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
@@ -15,14 +16,16 @@ class Server:
         self.channel = ""
 
         #main functionality add and get names 
-        @self.app.route('/<channel>/', methods=['GET'])
-        async def handle_request(request, channel):
-
-            #safety
-            if channel != self.channel:
-                return response.text("")
+        @self.app.route('/bonjwa/', methods=['GET'])
+        async def handle_request(request):
 
             return response.text(names.cache.list_str())
+
+
+        #main functionality add and get names 
+        @self.app.route('/message/<name>/', methods=['GET'])
+        async def handle_request(request, name):
+            return response.text(messages.cache.get_message(name))
 
 
     def run(self, port = 8070, channel = ""):
